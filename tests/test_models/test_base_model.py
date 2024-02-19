@@ -7,7 +7,7 @@ from uuid import UUID
 import json
 import os
 import pycodestyle
-
+import pep8
 
 class test_basemodel(unittest.TestCase):
     """ """
@@ -25,8 +25,7 @@ class test_basemodel(unittest.TestCase):
         """
         pycostyle = pycodestyle.StyleGuide(quiet=True)
         result = pycostyle.check_files(['models/base_model.py'])
-        self.assertEqual(result.total_errors, 0,
-                         "Found code style errors (and warnings).")
+        self.assertEqual(result.total_errors, 0, "Found code style errors (and warnings).")
 
     def setUp(self):
         """ """
