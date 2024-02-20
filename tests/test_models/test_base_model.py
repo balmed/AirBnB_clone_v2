@@ -9,11 +9,12 @@ import os
 import pycodestyle
 import pep8
 
+
 class test_basemodel(unittest.TestCase):
-    """ """
+    """Unittests for testing instantiation of the BaseModel class."""
 
     def __init__(self, *args, **kwargs):
-        """ """
+        """constroctor """
         super().__init__(*args, **kwargs)
         self.name = 'BaseModel'
         self.value = BaseModel
@@ -25,7 +26,7 @@ class test_basemodel(unittest.TestCase):
         """
         pycostyle = pycodestyle.StyleGuide(quiet=True)
         result = pycostyle.check_files(['models/base_model.py'])
-        self.assertEqual(result.total_errors, 0, "Found code style errors (and warnings).")
+        self.assertEqual(result.total_errors, 0, 'Found code style')
 
     def setUp(self):
         """ """
@@ -34,7 +35,7 @@ class test_basemodel(unittest.TestCase):
     def tearDown(self):
         try:
             os.remove('file.json')
-        except:
+        except FileNotFoundError:
             pass
 
     def test_default(self):
@@ -220,4 +221,3 @@ class TestBaseModel(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
