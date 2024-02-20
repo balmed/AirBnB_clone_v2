@@ -26,7 +26,8 @@ class test_basemodel(unittest.TestCase):
         """
         pycostyle = pycodestyle.StyleGuide(quiet=True)
         result = pycostyle.check_files(['models/base_model.py'])
-        self.assertEqual(result.total_errors, 0, 'Found code style')
+        self.assertEqual(result.total_errors, 0,
+                "Found code style errors (and warnings)")
 
     def setUp(self):
         """ """
@@ -35,7 +36,7 @@ class test_basemodel(unittest.TestCase):
     def tearDown(self):
         try:
             os.remove('file.json')
-        except FileNotFoundError:
+        except:
             pass
 
     def test_default(self):
