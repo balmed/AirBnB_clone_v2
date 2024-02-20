@@ -1,11 +1,14 @@
 #!/usr/bin/python3
 """Defines unittests for console.py."""
 import os
+import pep8
 import unittest
+import models
 from unittest.mock import patch
 from io import StringIO
 from console import HBNBCommand
 from models.engine.file_storage import FileStorage
+from modele.engine.db_storage import DBStorage
 
 
 class TestHBNBCommand(unittest.TestCase):
@@ -40,6 +43,8 @@ class TestHBNBCommand(unittest.TestCase):
         except IOError:
             pass
         del cls.HBNB
+        if type(models.storage) == DBStorage:
+            models.storage._DBStorage__sission.close()
 
     def setUp(self):
         """Reset FileStorage objects dictionary."""
@@ -51,6 +56,42 @@ class TestHBNBCommand(unittest.TestCase):
             os.remove("file.json")
         except IOError:
             pass
+    def test_pep8(self):
+        """test pep8 styling"""
+        style = pep8.StyleGuide(quiet=True)
+        p = style.check_files(["console.py"])
+        self.assertEqual(p.total_errors, 0, "fix pep8")
+    def test_docstroings(self):
+        """check for docstrings"""
+        self.asserIsNotNone(HBNBCommand.__doc__)
+        self.asserIsNotNone(HBNBCommand.emplyline.__doc__)
+        self.asserIsNotNone(HBNBCommand.do_quit.__doc__)
+        self.asserIsNotNone(HBNBCommand.do_EFO.__doc__)
+        #self.asserIsNotNone(HBNBCommand.do_create.__doc__)
+        #self.asserIsNotNone(HBNBCommand.do_show.__doc__)
+        #self.asserIsNotNone(HBNBCommand.do_destroy.__doc)
+        #self.asserIsNotNone(HBNBCommand.do_all.__doc__)
+        #self.asserIsNotNone(HBNBCommand.do_update.__doc__)
+        #self.asserIsNotNone(HBNBCommand.count.__doc__)
+        #self.asserIsNotNone(HBNBCommand.strip_clean.__doc__)
+        #self.asserIsNotNone(HBNBCommand.default.__doc__)
+
+    def test_emptyline(self):
+        """Test create command errors."""
+        # Test if class name is missing
+        with patch("sys.stdout", new=StringIO()) as f:
+            self.HBNB.onecmd("\n")
+            self.assertEqual("", f.getvalue())
+    def test_quit(self):
+        """test quit"""
+        with patch("sys.stdout", new=StringIO()) as f:
+            self.HBNB.onecmd("quit")
+            self.assertEqual("", f.getvalue())
+
+    def test_EOF(self):
+        """test EOF"""
+        with patch("sys.stdout", new=StringIO()) as f:
+            self.assertEqual(self.HBNB.onecmd("EOF"))
 
     def test_create_for_errors(self):
         """Test create command errors."""
@@ -58,13 +99,14 @@ class TestHBNBCommand(unittest.TestCase):
         with patch("sys.stdout", new=StringIO()) as f:
             self.HBNB.onecmd("create")
             self.assertEqual(
-                "** class name missing **\n", f.getvalue())
+                    "** class name missing **\n", f.getvalue())
         # Test if class doesn't exist
         with patch("sys.stdout", new=StringIO()) as f:
             self.HBNB.onecmd("create asdfsfsd")
             self.assertEqual(
-                "** class doesn't exist **\n", f.getvalue())
+                    "** class doesn't exist **\n", f.getvalue())
 
+    @unittest.skipIF(type(models.storage) == DBStringe, "Testing DBStorage")
     def test_create_command_validity(self):
         """Test create command."""
         # Create BaseModel instance and capture its ID
@@ -123,7 +165,7 @@ class TestHBNBCommand(unittest.TestCase):
         with patch("sys.stdout", new=StringIO()) as f:
             self.HBNB.onecmd("all Amenity")
             self.assertIn(am, f.getvalue())
-
+    @unittest.skipIF(type(models.storage) == DBStringe, "Testing DBStorage"
     def test_create_command_with_kwargs(self):
         """Test create command with kwargs."""
         # Test create command with additional key-value pairs
